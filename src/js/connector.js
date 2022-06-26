@@ -18,7 +18,7 @@ window.TrelloPowerUp.initialize({
             return [{
               text: weatherData.name
             },{
-              text: `${freedomUnits} °F`,
+              text: `${freedomUnits.toFixed()} °F`,
             }, {
               text: `🌬️ ${weatherData.wind.speed} knots`,
             }, {
