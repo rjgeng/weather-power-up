@@ -1,9 +1,11 @@
 const { Promise } = window.TrelloPowerUp;
+
 const clearCache = t => {
   if (t.memberCanWriteToModel('card')) {
     t.remove('card', 'shared', 'cache');
   }
 };
+
 const getCachedData = t =>
   Promise.all([t.card('coordinates'), t.get('card', 'shared', 'cache')]).spread((card, cache) => {
     if (!cache) {
@@ -32,6 +34,7 @@ const getCachedData = t =>
     // everything checks out, we have good cached data we can use
     return cache.weather;
   });
+
 const cacheWeatherData = (t, coordinates, weatherData) => {
   // we can only cache it if the current Trello member has write access
   if (t.memberCanWriteToModel('card')) {
@@ -50,18 +53,21 @@ const cacheWeatherData = (t, coordinates, weatherData) => {
 // we don't want to accidentally make three requests to the weather API per card
 // instead we will hold onto and reuse promises based on the id of the card
 const weatherRequests = new Map();
+
 const fetchWeatherData = t => {
   const idCard = t.getContext().card;
   if (weatherRequests.has(idCard)) {
     // we already have a request in progress for that card, let's reuse that
     return weatherRequests.get(idCard);
   }
+
   const weatherRequest = Promise.all([t.card('coordinates'), getCachedData(t)]).spread(
     (card, cache) => {
       if (!card.coordinates) {
         weatherRequests.delete(idCard);
         return null;
       }
+
       const { latitude, longitude } = card.coordinates;
       if (cache) {
         weatherRequests.delete(idCard);
@@ -108,7 +114,7 @@ const getWeatherBadges = t =>
           return fetchWeatherData(trello).then(weatherData => {
             return {
               title: 'Temperature',
-              text: `🌡 ${weatherData.temp} °F`,
+              text: `${weatherData.temp} °F`,
               refresh: 30 * 60,
             };
           });
@@ -139,6 +145,7 @@ const getWeatherBadges = t =>
       },
     ];
   });
+  
 window.TrelloPowerUp.initialize({
   // return an array of card badges for the given card
   'card-badges': t => getWeatherBadges(t),
