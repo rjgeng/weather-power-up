@@ -125,7 +125,7 @@ const getWeatherBadges = t =>
           return fetchWeatherData(trello).then(weatherData => {
             return {
               title: 'Wind Speed',
-              text: `🌬️ ${weatherData.wind} mph`, // in miles / hour
+              text: `🌬️ ${weatherData.wind.toFixed()} mph`, // in miles / hour
               refresh: 30 * 60,
             };
           });
@@ -145,7 +145,7 @@ const getWeatherBadges = t =>
       },
     ];
   });
-  
+
 window.TrelloPowerUp.initialize({
   // return an array of card badges for the given card
   'card-badges': t => getWeatherBadges(t),
