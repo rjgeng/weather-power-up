@@ -2,7 +2,6 @@
 [[headers]]
   # Define which paths this specific [[headers]] block will cover.
   for = "/*"
-
   [headers.values]
     Referrer-Policy = "origin-when-cross-origin"
     X-XSS-Protection = "1; mode=block"
@@ -12,4 +11,5 @@
     default-src 'self';
     connect-src 'self' https://p.trellocdn.com https://api.openweathermap.org;
     script-src 'self' https://p.trellocdn.com;
+    style-src 'self' https://p.trellocdn.com;
     frame-ancestors https://trello.com;'''
